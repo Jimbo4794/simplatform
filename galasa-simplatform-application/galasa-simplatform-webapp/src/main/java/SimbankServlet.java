@@ -87,10 +87,10 @@ public class SimbankServlet extends HttpServlet {
 		String output = "";
 		
 		if(statusCode != 200) {
-			output = "<p>Transaction failed</p>";
+			output = "<p id='output'>Transaction failed</p>";
 
 		}else {
-			output = "<p>Transaction complete</p>";
+			output = "<p id='output'>Transaction complete</p>";
 		}
 		
 		out.print(output);
