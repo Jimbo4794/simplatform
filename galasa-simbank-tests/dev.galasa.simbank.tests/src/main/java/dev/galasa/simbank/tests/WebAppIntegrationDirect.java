@@ -15,7 +15,6 @@ import dev.galasa.artifact.BundleResources;
 import dev.galasa.artifact.IBundleResources;
 import dev.galasa.core.manager.Logger;
 import dev.galasa.core.manager.StoredArtifactRoot;
-import dev.galasa.docker.DockerContainer;
 import dev.galasa.http.HttpClient;
 import dev.galasa.http.IHttpClient;
 import dev.galasa.selenium.IFirefoxOptions;
@@ -38,37 +37,35 @@ import dev.galasa.zosbatch.ZosBatch;
 import dev.galasa.zosbatch.ZosBatchJobname;
 
 @Test
-public class WebAppIntegrationTest {
-
-	// Application specific objects
+public class WebAppIntegrationDirect {
+	
 	@SimBank
-	public ISimBank 			bank;
+	public ISimBank 		bank;
 	@SimBankTerminal
-	public ISimBankTerminal 	bankTerminal;
+	public ISimBankTerminal bankTerminal;
 	@SimBankWebApp
-	public ISimBankWebApp		webApp;
+	public ISimBankWebApp	webApp;
 	
-	// z/OS objects
 	@ZosImage(imageTag = "SIMBANK")
-	public IZosImage        	image;
+	public IZosImage        				image;
 	@ZosBatch(imageTag="SIMBANK")
-    public IZosBatch 			zosBatch;
+    public IZosBatch 						zosBatch;
     @ZosBatchJobname(imageTag="SIMBANK")
-	public IZosBatchJobname 	zosBatchJobname;
+	public IZosBatchJobname 				zosBatchJobname;
     
-    // Test technology objects
 	@SeleniumManager
-	public ISeleniumManager 	seleniumManager;
+	public ISeleniumManager seleniumManager;
 	@BundleResources
-	public IBundleResources 	resources;
-	
-	// Logging and reporting
+	public IBundleResources resources;
+	@HttpClient
+	public IHttpClient      client;
+	 
 	@StoredArtifactRoot
-	public Path             	artifactRoot;
+	public Path             artifactRoot;
 	@Logger
-	public Log              	logger;
+	public Log              logger;
 	
-	private final BigDecimal 	openingBalance = BigDecimal.valueOf(100.00);
+	private final BigDecimal openingBalance = BigDecimal.valueOf(100.00);
 	
 	@Test
 	public void webAppIntegrationTest() throws Exception {
@@ -102,13 +99,7 @@ public class WebAppIntegrationTest {
 		BigDecimal balance = retrieveAccountBalance(accountNumber);
 		assertThat(balance).isEqualTo(openingBalance.add(creditAmount));
 	}
-	
-	
-	/**
-	 * 
-	 *                           Utility Methods
-	 * 
-	 */
+
 	public String provisionAccount(BigDecimal openingBalance) throws Exception {
 		// Generate a random account number
 		String accountNumber =  generateRandomAccountNumber();
